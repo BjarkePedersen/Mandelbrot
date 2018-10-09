@@ -1,0 +1,11 @@
+[package]
+name = "mandlebrot"
+version = "0.1.0"
+authors = ["Bjarke <Bjarke.pedersen@inprove.dk>"]
+
+[dependencies]
+minifb = "*"
+rgb = "*"
+rand = "*"
+cgmath = "*"
+rayon = "*"
