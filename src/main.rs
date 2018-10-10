@@ -28,6 +28,8 @@ fn main() {
 
     let mut x_offset = 0.0;
     let mut y_offset = 0.0;
+    let mut imaginary_x_offset = 0.0;
+    let mut imaginary_y_offset = 0.0;
     let mut zoom = 1.0;
     let mut bw = false;
     let mut hue = false;
@@ -55,6 +57,10 @@ fn main() {
                     Key::D => (x_offset += 0.15 * zoom),
                     Key::Space => (zoom *= 1.5),
                     Key::LeftShift => (zoom *= 0.9),
+                    Key::Left => (imaginary_x_offset += 0.01),
+                    Key::Right => (imaginary_x_offset -= 0.01),
+                    Key::Down => (imaginary_y_offset += 0.01),
+                    Key::Up => (imaginary_y_offset -= 0.01),
                     _ => (),
                 };
             }
@@ -68,9 +74,10 @@ fn main() {
                 let x0 = uv.x / HEIGHT as f64 * 3.0 * zoom - 2.0 * zoom + x_offset;
                 let y0 = uv.y / HEIGHT as f64 * 3.0 * zoom - 1.5 * zoom + y_offset;
 
-                let mut x = 0.0;
-                let mut y = 0.0;
                 let mut iteration = 0.0;
+
+                let mut x = imaginary_x_offset;
+                let mut y = imaginary_y_offset;
 
                 while x * x + y * y <= 4.0 && iteration < MAX_ITERATION {
                     let xtemp = x * x - y * y + x0;
