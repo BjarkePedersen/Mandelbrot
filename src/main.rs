@@ -80,53 +80,29 @@ fn main() {
                     iteration += 1.0;
                 }
 
-                if bw {
-                    if iteration < MAX_ITERATION {
-                        let log_zn = (x * x + y * y).log(10.0) / 2.0;
-                        let nu = (log_zn / (2 as f64).log(10.0)).log(10.0) / (2 as f64).log(10.0);
-                        iteration = iteration + 1.0 - nu;
-                    }
-                    let col = Col::new(
-                        (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
-                        (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
-                        (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
-                    );
-                    pixel.r = col.r;
-                    pixel.g = col.g;
-                    pixel.b = col.b;
-                } else if hue {
-                    if iteration < MAX_ITERATION {
-                        let log_zn = (x * x + y * y).log(10.0) / 2.0;
-                        let nu = (log_zn / (2 as f64).log(10.0)).log(10.0) / (2 as f64).log(10.0);
-                        iteration = iteration + 1.0 - nu;
+                let mut col = Col::new(0.0, 0.0, 0.0);
 
-                        let col = hsv((10.0 * iteration / MAX_ITERATION) % 1.0, 1.0, 1.0);
-                        pixel.r = col.r;
-                        pixel.g = col.g;
-                        pixel.b = col.b;
-                    } else {
-                        let col = Col::new(0.0, 0.0, 0.0);
-                        pixel.r = col.r;
-                        pixel.g = col.g;
-                        pixel.b = col.b;
-                    }
-                } else {
-                    if iteration < MAX_ITERATION {
-                        let log_zn = (x * x + y * y).log(10.0) / 2.0;
-                        let nu = (log_zn / (2 as f64).log(10.0)).log(10.0) / (2 as f64).log(10.0);
-                        iteration = iteration + 1.0 - nu;
+                if iteration < MAX_ITERATION {
+                    let log_zn = (x * x + y * y).log(10.0) / 2.0;
+                    let nu = (log_zn / (2 as f64).log(10.0)).log(10.0) / (2 as f64).log(10.0);
+                    iteration = iteration + 1.0 - nu;
 
-                        let col = color_ramp((10.0 * iteration / MAX_ITERATION) % 1.0);
-                        pixel.r = col.r;
-                        pixel.g = col.g;
-                        pixel.b = col.b;
+                    if bw {
+                        col = Col::new(
+                            (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
+                            (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
+                            (10.0 * iteration as f64 % MAX_ITERATION) / MAX_ITERATION,
+                        );
+                    } else if hue {
+                        col = hsv(0.6 + (10.0 * iteration / MAX_ITERATION) % 1.0, 1.0, 1.0);
                     } else {
-                        let col = Col::new(0.0, 0.0, 0.0);
-                        pixel.r = col.r;
-                        pixel.g = col.g;
-                        pixel.b = col.b;
+                        col = color_ramp((10.0 * iteration / MAX_ITERATION) % 1.0);
                     }
                 }
+
+                pixel.r = col.r;
+                pixel.g = col.g;
+                pixel.b = col.b;
             });
 
         for (col_1, col_2) in rgb_buffer.iter().zip(buffer.iter_mut()) {
